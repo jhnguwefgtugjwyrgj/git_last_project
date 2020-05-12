@@ -75,12 +75,11 @@ def buys():
     if current_user.is_authenticated:
         session = db_session.create_session()
         user = session.query(users.User).filter(users.User.id == current_user.id).first()
-        print([
-            int(i) for i in user.buys.split()])
-        new = session.query(news.News).filter(news.News.id in [
-            int(i) for i in user.buys.split()]).all()
-        print(new)
-        return render_template('buys.html', title='Ваши покупки', news=new)
+        news_ = []
+        for i in user.buys.split():
+            news_.append(session.query(news.News).filter(news.News.id == int(i)).first())
+        print(news_)
+        return render_template('buys.html', title='Ваши покупки', news=news_)
 
 
 @app.route('/buy/<int:id>')
